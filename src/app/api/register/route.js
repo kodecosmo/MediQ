@@ -12,14 +12,14 @@ export async function POST(request) {
   try {
     await connectDB();
   } catch (error) {
-    return Response.json({ success: false, error: error })
+    return Response.json({ success: false, message: error })
   }
   
   try {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return Response.json({ success: false, error: 'User with this email already exists' });
+      return Response.json({ success: false, message: 'email allready taken' });
     }
 
     const user = new User({
@@ -40,6 +40,6 @@ export async function POST(request) {
       user,
     });
   } catch (error) {
-    return Response.json({ success: false, error: error });
+    return Response.json({ success: false, message: error });
   }
 }

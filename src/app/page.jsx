@@ -2,9 +2,14 @@
 
 import Navbar from '@/components/Navbar';
 import useFetch from '@/hooks/useFetch';
-import Image from 'next/image'
+import useHasntToken from '@/hooks/useHasntToken';
+import { useEffect } from 'react';
 
 function Home() {
+
+  const {isPending:isTokenValidating, error:errorToken, handleDispatch:handleDispatch} = useHasntToken('/api/validate-token');
+
+  useEffect(() => handleDispatch(), []);
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 

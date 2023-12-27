@@ -1,31 +1,32 @@
-import { nextResponse } from "next/server";
-
-export async function GET() {
-
-    return nextResponse.json({
-        this: "GET",
-    });
-}
+import connectDB from '@/utils/db';
+import User from '@/models/User';
 
 export async function POST(request) {
+  
+  const data = await request.json();
+  
+  const email = data.email;
+  const password = data.password;
 
-    const formData = await request.formData()
-    const name = formData.get('name')
-    const email = formData.get('email')
-    const password = formData.get('password')
-    return Response.json({ name, email, password })
-}
+  try {
+    await connectDB();
+  } catch (error) {
+    return Response.json({ success: false, message: error })
+  }
+  
+  try {
+    const user = await User.findOne({ email, password });
 
-export async function PUT() {
+    if (!user) {
+      return Response.json({ success: false, message: 'user credentials do not match' });
+    }
 
-    return nextResponse.json({
-        this: "PUT",
+    return Response.json({
+      success: true,
+      message: 'User logged in successfully',
+      user,
     });
-}
-
-export async function DELETE() {
-
-    return nextResponse.json({
-        this: "DELETE",
-    });
+  } catch (error) {
+    return Response.json({ success: false, message: error });
+  }
 }
