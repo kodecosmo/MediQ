@@ -34,3 +34,30 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Docs by Kenura
+
+### Run the jsonserver
+
+```
+npm start json-server
+```
+
+then you will get the
+
+1. http://localhost:4000/users
+2. http://localhost:4000/messages
+
+to mess around with. but later these should be fetched from the db.
+
+## Build and run the docker server
+
+```
+docker-compose up --build
+```
+
+## Run the docker server
+
+```
+docker-compose up
+```

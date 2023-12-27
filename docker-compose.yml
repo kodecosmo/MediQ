@@ -1,0 +1,31 @@
+# docker-compose.yml
+version: '3'
+services:
+
+  nextjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: nextjs-mediq
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./src:/app/src
+
+  mongodb:
+    build:
+      context: .
+      dockerfile: Dockerfile.mongo
+    image: "mongo:latest"
+    container_name: mongodb-mediq
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "2003#kode"
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
