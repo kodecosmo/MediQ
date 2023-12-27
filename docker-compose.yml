@@ -25,6 +25,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: "root"
       MONGO_INITDB_ROOT_PASSWORD: "2003#kode"
+      MONGO_INITDB_DATABASE: "medi_q"
     ports:
       - "27017:27017"
     volumes:

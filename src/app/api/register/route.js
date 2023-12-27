@@ -1,30 +1,25 @@
-import connectDB from '@/utils/db'; // Update the path based on your project structure
-import User from '@/models/User'; // Update the path based on your project structure
+import connectDB from '@/utils/db';
+import User from '@/models/User';
 
 export async function POST(request) {
   
-  const formData = await request.formData()
+  const data = await request.json();
   
-  const name = formData.get('name');
-  const email = formData.get('email');
-  const password = formData.get('password');
+  const name = data.name;
+  const email = data.email;
+  const password = data.password;
 
   try {
     await connectDB();
   } catch (error) {
     return Response.json({ success: false, error: error })
   }
-
-  // const existingUser = await User.findOne({ email: email }).exec();
-
+  
   try {
     const existingUser = await User.findOne({ email });
 
-    return Response.json(existingUser)
-  
     if (existingUser) {
-      // User already exists, handle accordingly (e.g., send an error response)
-      return res.status(400).json({ error: 'User with this email already exists' });
+      return Response.json({ success: false, error: 'User with this email already exists' });
     }
 
     const user = new User({
@@ -39,13 +34,12 @@ export async function POST(request) {
     user.token = user.generateAuthToken();
     await user.save();
 
-    return res.status(201).json({
+    return Response.json({
       success: true,
       message: 'User created successfully',
-      user: { user },
+      user,
     });
   } catch (error) {
-    console.error('Error creating user', error);
-    return res.status(500).json({ success: false, error: 'Internal Server Error' });
+    return Response.json({ success: false, error: error });
   }
 }

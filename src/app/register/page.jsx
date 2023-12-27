@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/navigation'
+import Error from "@/components/Error";
 
 function Register() {
 
@@ -9,12 +10,13 @@ function Register() {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [isPending, setIsPending] = useState(false);
+    const [error, setError] = useState(null);
 
     const router = useRouter();
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
-        
         setIsPending(true);
 
         try {
@@ -24,26 +26,37 @@ function Register() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ name, email, password }),
+            })
+            .then(res => {
+                if (!res.ok) {
+                    throw Error('Coud not fetch the data from the resource');
+                }
+                return res.json();
+            })
+            .then(data => {
+                setData(data);
+                setError(null);
+                setIsPending(false);
+            })
+            .catch(err => {
+                setError(err.message);
+                setIsPending(false);
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Error:', errorData);
+            const responseData = await response.json();
 
-                localStorage.setItem('token', response.data.user.token);
-                console.error('Token:', response.data.user.token);
+            if (!responseData.success) {
+                setError(responseData.message);
                 setIsPending(false);
                 return;
             }
 
-            const responseData = await response.json();
-            console.log('Success:', responseData);
-
+            localStorage.setItem('token', responseData.user.token);
+            setError(null);
             setIsPending(false);
-            // router.push('/');
-            // Handle success, e.g., redirect to a new page
+            router.push('/');
         } catch (error) {
-            console.error('Unexpected error:', error);
+            setError(error);
             setIsPending(false);
         }
     }
@@ -60,7 +73,7 @@ function Register() {
 
                 {!isPending && <button type="submit" className="block p-2 bg-gray-900 text-white w-full">Register</button>}
                 {isPending && <button disabled className="block p-2 bg-gray-900 text-white w-full">Creating user...</button>}
-                
+                {error && <Error message={error} />}
             </form>
         </main>
     );
