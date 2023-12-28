@@ -5,16 +5,12 @@ export async function POST(request) {
   
   const data = await request.json();
   
-  const email = data.email;
-  const password = data.password;
+  const email = data.email || null;
+  const password = data.password || null;
 
   try {
     await connectDB();
-  } catch (error) {
-    return Response.json({ success: false, message: error })
-  }
-  
-  try {
+
     const user = await User.findOne({ email, password });
 
     if (!user) {
@@ -24,7 +20,13 @@ export async function POST(request) {
     return Response.json({
       success: true,
       message: 'User logged in successfully',
-      user,
+      user: {
+          name: user.name,
+          email: user.email,
+          updated_at: user.updated_at,
+          created_at: user.created_at,
+          token: user.token,
+      },
     });
   } catch (error) {
     return Response.json({ success: false, message: error });

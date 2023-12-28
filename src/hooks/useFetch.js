@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const useFetch = (url) => {
+const useFetch = (url, method) => {
     
     const [data, setData] = useState([]);
 
@@ -8,7 +8,16 @@ const useFetch = (url) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch(url)
+
+        const token = localStorage.getItem('token');
+        
+        fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            })
             .then(res => {
                 if (!res.ok) {
                     throw Error('Coud not fetch the data from the resource');

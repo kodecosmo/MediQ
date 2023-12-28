@@ -9,12 +9,12 @@ try {
 } catch (e) {
   // Define the model if it doesn't exist
   const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    password: String,
-    token: String,
-    updated_at: Date,
-    created_at: Date,
+    name: { type: String, required: true, },
+    email: { type: String, required: true, },
+    password: { type: String, required: true, },
+    token: { type: String, required: false, },
+    updated_at: { type: Date, required: true, },
+    created_at: { type: Date, required: true, },
   });
 
   // Create a JWT token for the user

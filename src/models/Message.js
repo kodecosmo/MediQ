@@ -1,14 +1,22 @@
 import mongoose from 'mongoose';
 
-const messageSchema = new mongoose.Schema({
-  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  request: String,
-  response: String,
-  is_error: Boolean,
-  updated_at: Date,
-  created_at: Date,
-});
+let Message;
 
-const Message = mongoose.model('Message', messageSchema);
+try {
+  // Try to retrieve the existing model
+  Message = mongoose.model('Message');
+} catch (e) {
+  
+  const messageSchema = new mongoose.Schema({
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    request: { type: String, required: true, },
+    response: { type: String, required: false, },
+    is_error: { type: Boolean, default: false, },
+    updated_at: { type: Date, required: true, },
+    created_at: { type: Date, required: true, },
+  });
 
-export default Message
+  Message = mongoose.model('Message', messageSchema);
+}
+
+export default Message;

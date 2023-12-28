@@ -24,7 +24,7 @@ const useHasToken = (url) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'token': token,
+                    'Authorization': `Bearer ${token}`,
                 }
             })
             .then(res => {

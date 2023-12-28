@@ -3,7 +3,9 @@
 import Navbar from '@/components/Navbar';
 import useFetch from '@/hooks/useFetch';
 import useHasntToken from '@/hooks/useHasntToken';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 function Home() {
 
@@ -11,9 +13,9 @@ function Home() {
 
   useEffect(() => handleDispatch(), []);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-  const { data: messages, isPending, error } = useFetch(`${apiUrl}/messages`);
+  const { data: data, isPending, error } = useFetch('api/messages', 'GET');
+  
+  const [messages, setMessages] = useState([]);
   
   const headerWidth = "60"; // px
 
@@ -21,22 +23,37 @@ function Home() {
 
   const outputWidth = new Number(headerWidth) + new Number(searchWidth); // px
 
+  useEffect(() => {
+
+    setMessages(data.messages || []);
+
+  }, [isPending]);
+
+
   const messagesList = messages.map(message => {
+
     return (
-      <div key={message.id} className='mb-6'>
+      <div key={message._id} className='mb-6'>
 
         <div className='w-fit px-3 py-2 bg-gray-100 mb-2'>
-          <div className='font-semibold text-sm mb-1'>{message.user_id}</div>
+          <div className='font-semibold text-sm mb-1'>[User]</div>
           <div className='font-medium text-xs'>{message.request}</div>
         </div>
 
         <div className='w-fit px-3 py-2 bg-orange-100 mb-2'>
           <div className='font-semibold text-sm mb-1'>MediQ</div>
-          <div className='font-medium text-xs'>{message.response}</div>
+          <div className='font-medium text-xs'>
+
+            {JSON.parse(message.response).map((line, index) => {
+              return (<p key={index} dangerouslySetInnerHTML={{ __html: marked.parse(DOMPurify.sanitize(line.text)) }} />)
+            })}
+          
+          </div>
         </div>
 
       </div>
     )
+
   }); 
 
   return (
@@ -44,7 +61,7 @@ function Home() {
       
       <Navbar width={headerWidth} />
 
-      <section className={`w-full p-3`} style={{ height: `calc(100% - ${outputWidth}px)` }}>
+      <section className={`generated-output w-full p-3 overflow-y-auto overflow-x-hidden`} style={{ height: `calc(100% - ${outputWidth}px)` }}>
         {messagesList}
       </section>
 
