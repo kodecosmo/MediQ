@@ -4,13 +4,14 @@ import jwt from 'jsonwebtoken';
 import User from '@/models/User';
 import Message from '@/models/Message';
 import fetch from 'node-fetch';
+import getTokenFromHeaders from '@/helpers/getTokenFromHeaders';
 
 export async function GET(request) {
 
     try {
 
         // Get the token from the request headers
-        const token = request.headers.get('Authorization')?.replace('Bearer ', '') || null;
+        const token = await getTokenFromHeaders(request);
 
         await connectDB();
 
@@ -46,7 +47,6 @@ export async function GET(request) {
     }
 }
 
-
 export async function POST(request) {
 
     const data = await request.json();
@@ -54,10 +54,11 @@ export async function POST(request) {
     const question = data.request || null;
     
     try {
-        await connectDB();
 
         // Get the token from the request headers
-        const token = request.headers.get('Authorization')?.replace('Bearer ', '') || null;
+        const token = await getTokenFromHeaders(request);
+
+        await connectDB();
 
         if (!token) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });

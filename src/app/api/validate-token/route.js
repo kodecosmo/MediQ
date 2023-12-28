@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/utils/db';
 import jwt from 'jsonwebtoken';
 import User from '@/models/User';
+import getTokenFromHeaders from '@/helpers/getTokenFromHeaders';
 
 export async function GET(request) {
 
     try {
 
         // Get the token from the request headers
-        const token = request.headers.get('Authorization')?.replace('Bearer ', '') || null;
+        const token = await getTokenFromHeaders(request);
 
         await connectDB();
 
