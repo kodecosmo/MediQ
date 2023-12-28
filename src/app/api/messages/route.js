@@ -8,10 +8,10 @@ import getTokenFromHeaders from '@/helpers/getTokenFromHeaders';
 
 export async function GET(request) {
 
-    try {
+    // Get the token from the request headers
+    const token = await getTokenFromHeaders(request);
 
-        // Get the token from the request headers
-        const token = await getTokenFromHeaders(request);
+    try {
 
         await connectDB();
 
@@ -52,11 +52,11 @@ export async function POST(request) {
     const data = await request.json();
   
     const question = data.request || null;
-    
-    try {
 
-        // Get the token from the request headers
-        const token = await getTokenFromHeaders(request);
+    // Get the token from the request headers
+    const token = await getTokenFromHeaders(request);
+
+    try {
 
         await connectDB();
 

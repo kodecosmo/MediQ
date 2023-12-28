@@ -6,10 +6,10 @@ import getTokenFromHeaders from '@/helpers/getTokenFromHeaders';
 
 export async function GET(request) {
 
-    try {
+    // Get the token from the request headers
+    const token = await getTokenFromHeaders(request);
 
-        // Get the token from the request headers
-        const token = await getTokenFromHeaders(request);
+    try {
 
         await connectDB();
 
