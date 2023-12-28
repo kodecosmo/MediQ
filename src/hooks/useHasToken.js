@@ -38,6 +38,7 @@ const useHasToken = (url) => {
                 if (!res.success) {
                     setError(res.message);
                     setIsPending(false);
+                    return;
                 }
 
                 setError(null);
