@@ -15,7 +15,7 @@ function Login() {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
 
-    const { isPending:isPending, error:error, handleDispatch:handleDispatch } = useAuthenticate({ email, password }, '/api/login');
+    const { isPending:isPending, error:error, handleDispatch:handleDispatch } = useAuthenticate({ email, password }, '/api/login', 'POST');
 
     const handleSubmit = (e) => {
         e.preventDefault();

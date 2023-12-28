@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 
-const useAuthenticate = (data, url, method) => { 
+const useSearch = (searchData, url, method) => { 
 
-    const router = useRouter();
-
-    const redirectPath = process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL;
+    const [data, setData] = useState({});
 
     const [isPending, setIsPending] = useState(false);
     const [error, setError] = useState(null);
@@ -15,12 +13,16 @@ const useAuthenticate = (data, url, method) => {
         setIsPending(true);
 
         try {
-            const res = fetch(url, {
+                
+            const token = localStorage.getItem('token');
+            
+            fetch(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(searchData),
             })
             .then(res => {
                 if (!res.ok) {
@@ -28,18 +30,10 @@ const useAuthenticate = (data, url, method) => {
                 }
                 return res.json();
             })
-            .then(res => {
-
-                if (!res.success) {
-                    setError(res.message);
-                    setIsPending(false);
-                    return;
-                }
-
-                localStorage.setItem('token', res.user.token);
+            .then(data => {
+                setData(data);
                 setError(null);
                 setIsPending(false);
-                router.push(redirectPath);
             })
             .catch(err => {
                 setError(err.message);
@@ -52,7 +46,7 @@ const useAuthenticate = (data, url, method) => {
         }
     }
 
-    return { isPending, error, handleDispatch };
+    return { data, isPending, error, handleDispatch };
 }
 
-export default useAuthenticate;
+export default useSearch;

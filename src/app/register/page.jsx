@@ -16,7 +16,7 @@ function Register() {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
 
-    const { isPending:isPending, error:error, handleDispatch:handleDispatch } = useAuthenticate({ name, email, password }, '/api/register');
+    const { isPending:isPending, error:error, handleDispatch:handleDispatch } = useAuthenticate({ name, email, password }, '/api/register', 'POST');
 
     const handleSubmit = (e) => {
         e.preventDefault();
