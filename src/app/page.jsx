@@ -3,7 +3,7 @@
 import Navbar from '@/components/Navbar';
 import useFetch from '@/hooks/useFetch';
 import useHasntToken from '@/hooks/useHasntToken';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
@@ -16,19 +16,16 @@ function Home() {
   const { data: data, isPending, error } = useFetch('api/messages', 'GET');
   
   const [messages, setMessages] = useState([]);
-  
+
+  const scrollContainerRef = useRef(null);
+
   const headerWidth = "60"; // px
 
   const searchWidth = "60"; // px
 
   const outputWidth = new Number(headerWidth) + new Number(searchWidth); // px
 
-  useEffect(() => {
-
-    setMessages(data.messages || []);
-
-  }, [isPending]);
-
+  useEffect(() => setMessages(data.messages || []), [isPending]);
 
   const messagesList = messages.map(message => {
 
@@ -56,12 +53,19 @@ function Home() {
 
   }); 
 
+  useEffect(() => {
+    // Scroll to the bottom when the component mounts (page load)
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
+  }, [messagesList]);
+
   return (
     <main className="h-dvh">
       
       <Navbar width={headerWidth} />
 
-      <section className={`generated-output w-full p-3 overflow-y-auto overflow-x-hidden`} style={{ height: `calc(100% - ${outputWidth}px)` }}>
+      <section ref={scrollContainerRef} className={`generated-output w-full p-3 overflow-y-auto overflow-x-hidden`} style={{ height: `calc(100% - ${outputWidth}px)` }}>
         {messagesList}
       </section>
 

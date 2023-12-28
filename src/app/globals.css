@@ -4,9 +4,7 @@
 
 @layer utilities {
 
-    .generated-output{
-        ol > li{
-            @apply list-decimal ml-4;
-        }
+    .generated-output ol>li{
+        @apply list-decimal ml-4;
     }
 }
