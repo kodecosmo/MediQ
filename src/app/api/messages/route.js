@@ -9,10 +9,11 @@ import fetch from 'node-fetch';
 export async function GET(request) {
 
     try {
-        await connectDB();
 
         // Get the token from the request headers
         const token = headers().get('Authorization')?.replace('Bearer ', '') || null;
+
+        await connectDB();
 
         if (!token) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
