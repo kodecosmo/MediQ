@@ -91,6 +91,12 @@ function Home() {
       <Navbar width={headerWidth} />
 
       <section ref={scrollContainerRef} className={`w-full p-3 overflow-y-auto overflow-x-hidden`} style={{ height: `calc(100% - ${outputWidth}px)` }}>
+        {isPending && <div className='w-full flex justify-center items-center mt-3'>
+          <div className='w-fit flex justify-center items-center rounded-md bg-gray-50 p-3'>
+            <Spinner width="w-4" height="h-4" />
+            <span className="w-fit block ml-2">Loading</span>
+          </div>
+        </div>}
         {messagesList}
       </section>
 
@@ -101,7 +107,7 @@ function Home() {
           {isPendingSearch && <button disabled type='submit' className='w-fit flex justify-center items-center ml-2 px-3 py-2 border border-gray-100 bg-gray-900 text-white'>
               <Spinner width="w-4" height="h-4" />
               <span className="w-fit block ml-2">Loading</span>
-          </button>}       
+          </button>}
         </form>
       </section>
 
