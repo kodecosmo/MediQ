@@ -41,12 +41,24 @@ function Home() {
 
   useEffect(() => {
     setMessages(data.messages || []);
-    if (Object.keys(data).length > 0) {
-      setUser({
-        name: data.user.name,
-        email: data.user.email,
-      })
+
+    try {
+        
+      if (Object.keys(data).length > 0) {
+        setUser({
+          name: data.user.name,
+          email: data.user.email,
+        })
+      }
+        
+    } catch (error) {
+      
+        setUser({
+          name: null,
+          email: null,
+        })
     }
+
   }, [isPending]);
 
   const messagesList = messages.map(message => {
