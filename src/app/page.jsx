@@ -99,7 +99,7 @@ function Home() {
         </div>}
         {messagesList}
       </section>
-
+      
       <section className={`w-full px-3 py-2 border-t border-gray-100`} style={{ height: `${searchWidth}px` }}>
         <form onSubmit={handleSubmit} className='flex justify-between items-center h-full w-full'>
           <input disabled={isPendingSearch} type='text' ref={inputSearchRef} onChange={(e) => setSearch(e.target.value) } placeholder='Type your problem here...' className='w-full px-3 py-2 border'/>
