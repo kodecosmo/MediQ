@@ -28,13 +28,26 @@ function Home() {
 
   const { data: searchResult, isPending:isPendingSearch, error:errorSearch, handleDispatch:handleDispatchSearch } = useSearch({ request: search }, '/api/messages', 'POST');
 
+  const [user, setUser] = useState({
+    name: null,
+    email: null,
+  });
+
   const headerWidth = "60"; // px
 
   const searchWidth = "60"; // px
 
   const outputWidth = new Number(headerWidth) + new Number(searchWidth); // px
 
-  useEffect(() => setMessages(data.messages || []), [isPending]);
+  useEffect(() => {
+    setMessages(data.messages || []);
+    if (Object.keys(data).length > 0) {
+      setUser({
+        name: data.user.name,
+        email: data.user.email,
+      })
+    }
+  }, [isPending]);
 
   const messagesList = messages.map(message => {
 
@@ -42,7 +55,7 @@ function Home() {
       <div key={message._id} className='mb-6'>
 
         <div className='w-fit px-3 py-2 bg-gray-100 mb-2'>
-          <div className='font-semibold text-sm mb-1'>[User]</div>
+          <div className='font-semibold text-sm mb-1'>{user.name}</div>
           <div className='font-medium text-xs'>{message.request}</div>
         </div>
 
@@ -99,7 +112,7 @@ function Home() {
         </div>}
         {messagesList}
       </section>
-      
+
       <section className={`w-full px-3 py-2 border-t border-gray-100`} style={{ height: `${searchWidth}px` }}>
         <form onSubmit={handleSubmit} className='flex justify-between items-center h-full w-full'>
           <input disabled={isPendingSearch} type='text' ref={inputSearchRef} onChange={(e) => setSearch(e.target.value) } placeholder='Type your problem here...' className='w-full px-3 py-2 border'/>
