@@ -1,3 +1,5 @@
+// Filter and redirect routes with token to `/login`
+
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 

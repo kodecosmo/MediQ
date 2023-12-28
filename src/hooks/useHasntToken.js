@@ -1,3 +1,5 @@
+// Filter and redirect routes without token to `/`
+
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 
