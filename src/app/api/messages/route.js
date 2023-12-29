@@ -12,39 +12,46 @@ export async function GET(request) {
     const token = await getTokenFromHeaders(request);
 
     try {
-
-        await connectDB();
-
-        if (!token) {
+        
+        if (token === null) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }
 
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+           
+        try {
 
-        const user = await User.findOne({ _id: decodedToken._id });
-        
-        if (!user) {
-            return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
+            await connectDB();
+
+            const user = await User.findOne({ _id: decodedToken._id });
+            
+            if (!user) {
+                return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
+            }
+
+            const messages = await Message.find({ user_id: user._id });
+
+            return Response.json({
+                success: true,
+                message: 'Messages loaded successfull',
+                user: {
+                    name: user.name,
+                    email: user.email,
+                    updated_at: user.updated_at,
+                    created_at: user.created_at,
+                    token: user.token,
+                },
+                messages,
+            });
+                
+        } catch (error) {
+            return Response.json({ success: false, message: error.message });
         }
 
-        const messages = await Message.find({ user_id: user._id });
-
-        return Response.json({
-            success: true,
-            message: 'Messages loaded successfull',
-            user: {
-                name: user.name,
-                email: user.email,
-                updated_at: user.updated_at,
-                created_at: user.created_at,
-                token: user.token,
-            },
-            messages,
-        });
-            
     } catch (error) {
-        return Response.json({ success: false, message: error });
+        return NextResponse.json({ success: false, message: error.message }, { status: 401 });
     }
+
 }
 
 export async function POST(request) {
@@ -57,95 +64,102 @@ export async function POST(request) {
     const token = await getTokenFromHeaders(request);
 
     try {
-
-        await connectDB();
-
-        if (!token) {
+        
+        if (token === null) {
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
         }
 
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-        const user = await User.findOne({ _id: decodedToken._id });
-        
-        if (!user) {
-            return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
-        }
-
-        const apiKey = process.env.GEMINI_API_KEY; // Replace with your actual API key
-
-        const url = `${process.env.GEMINI_REQUEST_URL}?key=${apiKey}`;
-
-        const requestBody = {
-            contents: [
-                {
-                    parts: [
-                        {
-                            text: question,
-                        },
-                    ],
-                },
-            ],
-        };
-
+           
         try {
-            
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestBody),
-            });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+            await connectDB();
+
+            const user = await User.findOne({ _id: decodedToken._id });
+            
+            if (!user) {
+                return NextResponse.json({ success: false, message: 'User not found' }, { status: 401 });
             }
 
-            const data = await response.json();
-                        
-            const message = new Message({
-                user_id: user._id,
-                request: question,
-                response: JSON.stringify(data.candidates[0].content.parts),
-                is_error: false,
-                updated_at: new Date(),
-                created_at: new Date(),
-            });
+            const apiKey = process.env.GEMINI_API_KEY; // Replace with your actual API key
 
-            await message.save();
+            const url = `${process.env.GEMINI_REQUEST_URL}?key=${apiKey}`;
 
-            return Response.json({
-                success: true,
-                message: 'Message send successfully',
-                isGenerated: true,
-                genMessage: 'Message processed successfully',
-                response: message,
-            });
+            const requestBody = {
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: question,
+                            },
+                        ],
+                    },
+                ],
+            };
 
+            try {
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                            
+                const message = new Message({
+                    user_id: user._id,
+                    request: question,
+                    response: JSON.stringify(data.candidates[0].content.parts),
+                    is_error: false,
+                    updated_at: new Date(),
+                    created_at: new Date(),
+                });
+
+                await message.save();
+
+                return Response.json({
+                    success: true,
+                    message: 'Message send successfully',
+                    isGenerated: true,
+                    genMessage: 'Message processed successfully',
+                    response: message,
+                });
+
+            } catch (error) {
+                    
+                const message = new Message({
+                    user_id: user._id,
+                    request: question,
+                    response: null,
+                    is_error: true,
+                    updated_at: new Date(),
+                    created_at: new Date(),
+                });
+
+                await message.save();
+
+                return Response.json({
+                    success: true,
+                    message: `Message send successfully. Response error : ${error.message}`,
+                    isGenerated: false,
+                    genMessage: error,
+                    response: message,
+                });
+            }
+                
         } catch (error) {
-                  
-            const message = new Message({
-                user_id: user._id,
-                request: question,
-                response: null,
-                is_error: true,
-                updated_at: new Date(),
-                created_at: new Date(),
-            });
+            return Response.json({ success: false, message: error.message });
+        } 
 
-            await message.save();
-
-            return Response.json({
-                success: true,
-                message: 'Message processed successfully',
-                isGenerated: false,
-                genMessage: error,
-                response: message,
-            });
-        }
-            
     } catch (error) {
-        return Response.json({ success: false, message: error });
+        return NextResponse.json({ success: false, message: error.message }, { status: 401 });
     }
+
 }

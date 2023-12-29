@@ -9,6 +9,18 @@ export async function POST(request) {
   const email = data.email || null;
   const password = data.password || null;
 
+  if (!name || name == '') {
+      return Response.json({ success: false, message: 'name is required' });
+  }
+
+  if (!email || email == '') {
+      return Response.json({ success: false, message: 'email is required' });
+  }
+
+  if (!password || password == '') {
+      return Response.json({ success: false, message: 'password is required' });
+  }
+
   try {
     await connectDB();
 
@@ -42,6 +54,6 @@ export async function POST(request) {
       },
     });
   } catch (error) {
-    return Response.json({ success: false, message: error });
+    return Response.json({ success: false, message: error.message });
   }
 }
