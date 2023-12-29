@@ -124,7 +124,7 @@ export async function POST(request) {
             });
 
         } catch (error) {
-                  
+                
             const message = new Message({
                 user_id: user._id,
                 request: question,
