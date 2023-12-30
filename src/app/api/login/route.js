@@ -31,9 +31,9 @@ export async function POST(request) {
       user: {
           name: user.name,
           email: user.email,
+          token: user.generateAuthToken(),
           updated_at: user.updated_at,
           created_at: user.created_at,
-          token: user.token,
       },
     });
   } catch (error) {

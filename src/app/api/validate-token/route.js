@@ -35,7 +35,6 @@ export async function GET(request) {
                     email: user.email,
                     updated_at: user.updated_at,
                     created_at: user.created_at,
-                    token: user.token,
                 },
             });
         } catch (error) {
