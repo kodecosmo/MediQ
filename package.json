@@ -10,6 +10,7 @@
     "json-server": "npx json-server --watch data/db.json --port 4000"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dompurify": "^3.0.6",
     "jsonwebtoken": "^9.0.2",
     "marked": "^11.1.0",
