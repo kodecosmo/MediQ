@@ -39,8 +39,7 @@ function Register() {
           className="block p-6 mx-auto mt-6 w-full max-w-screen-sm"
           onSubmit={handleSubmit}
         >
-
-            <label className="block mb-2">Name</label>
+          <label className="block mb-2">Name</label>
           <input
             type="text"
             id="name"
@@ -50,7 +49,7 @@ function Register() {
             required
           />
 
-            <label className="block mb-2">Email</label>
+          <label className="block mb-2">Email</label>
           <input
             type="email"
             id="email"
@@ -60,7 +59,7 @@ function Register() {
             required
           />
 
-            <label className="block mb-2">Password</label>
+          <label className="block mb-2">Password</label>
           <input
             type="password"
             id="password"
