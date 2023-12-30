@@ -28,13 +28,38 @@ function Home() {
 
   const { data: searchResult, isPending:isPendingSearch, error:errorSearch, handleDispatch:handleDispatchSearch } = useSearch({ request: search }, '/api/messages', 'POST');
 
+  const [user, setUser] = useState({
+    name: null,
+    email: null,
+  });
+
   const headerWidth = "60"; // px
 
   const searchWidth = "60"; // px
 
   const outputWidth = new Number(headerWidth) + new Number(searchWidth); // px
 
-  useEffect(() => setMessages(data.messages || []), [isPending]);
+  useEffect(() => {
+    setMessages(data.messages || []);
+
+    try {
+        
+      if (Object.keys(data).length > 0) {
+        setUser({
+          name: data.user.name,
+          email: data.user.email,
+        })
+      }
+        
+    } catch (error) {
+      
+        setUser({
+          name: null,
+          email: null,
+        })
+    }
+
+  }, [isPending]);
 
   const messagesList = messages.map(message => {
 
@@ -42,7 +67,7 @@ function Home() {
       <div key={message._id} className='mb-6'>
 
         <div className='w-fit px-3 py-2 bg-gray-100 mb-2'>
-          <div className='font-semibold text-sm mb-1'>[User]</div>
+          <div className='font-semibold text-sm mb-1'>{user.name}</div>
           <div className='font-medium text-xs'>{message.request}</div>
         </div>
 
@@ -91,6 +116,12 @@ function Home() {
       <Navbar width={headerWidth} />
 
       <section ref={scrollContainerRef} className={`w-full p-3 overflow-y-auto overflow-x-hidden`} style={{ height: `calc(100% - ${outputWidth}px)` }}>
+        {isPending && <div className='w-full flex justify-center items-center mt-3'>
+          <div className='w-fit flex justify-center items-center rounded-md bg-gray-50 p-3'>
+            <Spinner width="w-4" height="h-4" />
+            <span className="w-fit block ml-2">Loading</span>
+          </div>
+        </div>}
         {messagesList}
       </section>
 
@@ -101,7 +132,7 @@ function Home() {
           {isPendingSearch && <button disabled type='submit' className='w-fit flex justify-center items-center ml-2 px-3 py-2 border border-gray-100 bg-gray-900 text-white'>
               <Spinner width="w-4" height="h-4" />
               <span className="w-fit block ml-2">Loading</span>
-          </button>}       
+          </button>}
         </form>
       </section>
 

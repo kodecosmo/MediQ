@@ -9,6 +9,18 @@ export async function POST(request) {
   const email = data.email || null;
   const password = data.password || null;
 
+  if (!name || name == '') {
+      return Response.json({ success: false, message: 'name is required' });
+  }
+
+  if (!email || email == '') {
+      return Response.json({ success: false, message: 'email is required' });
+  }
+
+  if (!password || password == '') {
+      return Response.json({ success: false, message: 'password is required' });
+  }
+
   try {
     await connectDB();
 
@@ -26,8 +38,6 @@ export async function POST(request) {
       created_at: new Date(),
     });
 
-    // Generate a token
-    user.token = user.generateAuthToken();
     await user.save();
 
     return Response.json({
@@ -36,12 +46,12 @@ export async function POST(request) {
       user: {
           name: user.name,
           email: user.email,
+          token: user.generateAuthToken(),
           updated_at: user.updated_at,
           created_at: user.created_at,
-          token: user.token,
       },
     });
   } catch (error) {
-    return Response.json({ success: false, message: error });
+    return Response.json({ success: false, message: error.message });
   }
 }
