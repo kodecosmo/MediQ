@@ -115,7 +115,7 @@ function Home() {
       
       <Navbar width={headerWidth} />
 
-      <section ref={scrollContainerRef} className={`w-full p-3 overflow-y-auto overflow-x-hidden`} style={{ height: `calc(100% - ${outputWidth}px)` }}>
+      <section ref={scrollContainerRef} className={`max-w-7xl w-full p-3 overflow-y-auto overflow-x-hidden`} style={{ height: `calc(100% - ${outputWidth}px)` }}>
         {isPending && <div className='w-full flex justify-center items-center mt-3'>
           <div className='w-fit flex justify-center items-center rounded-md bg-gray-50 p-3'>
             <Spinner width="w-4" height="h-4" />
