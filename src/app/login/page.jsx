@@ -5,6 +5,7 @@ import Error from "@/components/Error";
 import Spinner from "@/components/Spinner";
 import useAuthenticate from "@/hooks/useAuthenticate";
 import useHasToken from "@/hooks/useHasToken";
+import Link from "next/link";
 
 function Login() {
   const {
@@ -75,6 +76,7 @@ function Login() {
               <span className="w-fit block ml-2">Loading</span>
             </button>
           )}
+          <div className="mt-3">New user ? <Link href="/register"><span className="text-blue-600">Register now</span></Link> </div>
           {error && <Error message={error} />}
         </form>
       </div>

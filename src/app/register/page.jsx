@@ -5,6 +5,7 @@ import Error from "@/components/Error";
 import Spinner from "@/components/Spinner";
 import useAuthenticate from "@/hooks/useAuthenticate";
 import useHasToken from "@/hooks/useHasToken";
+import Link from "next/link";
 
 function Register() {
   const {
@@ -86,6 +87,7 @@ function Register() {
               <span className="w-fit block ml-2">Loading</span>
             </button>
           )}
+          <div className="mt-3">Existing user ? <Link href="/login"><span className="text-blue-600">Back to login</span></Link> </div>
           {error && <Error message={error} />}
         </form>
       </div>
