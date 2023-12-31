@@ -27,7 +27,7 @@ const Navbar = ({ width }) => {
         {!isPending && (
           <button
             onClick={handleLogout}
-            className="block w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+            className="block w-full bg-primary text-background p-2 rounded hover:bg-secondary hover:text-text transition-colors duration-200 ease-in-out"
           >
             Logout
           </button>
