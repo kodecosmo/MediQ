@@ -72,7 +72,7 @@ function Home() {
         </div>
 
         <div className='w-fit px-3 py-2 bg-orange-100 mb-2'>
-          <div className='font-semibold text-sm mb-1'>MediQ</div>
+          <div className='font-semibold text-sm mb-1'>Medi<span className='text-blue-500'>Q</span></div>
 
           {message.response ?
             <div className='font-medium text-xs'>
@@ -125,10 +125,10 @@ function Home() {
         {messagesList}
       </section>
 
-      <section className={`w-full px-3 py-2 border-t border-gray-100`} style={{ height: `${searchWidth}px` }}>
+      <section className={`max-w-7xl mx-auto px-3 py-2 border-t border-gray-100`} style={{ height: `${searchWidth}px` }}>
         <form onSubmit={handleSubmit} className='flex justify-between items-center h-full w-full'>
-          <input disabled={isPendingSearch} type='text' ref={inputSearchRef} onChange={(e) => setSearch(e.target.value) } placeholder='Type your problem here...' className='w-full px-3 py-2 border'/>
-          {!isPendingSearch && <button type='submit' className='w-fit ml-2 px-3 py-2 border border-gray-100 bg-gray-900 text-white'>Search</button>}
+          <input disabled={isPendingSearch} type='text' ref={inputSearchRef} onChange={(e) => setSearch(e.target.value) } placeholder='Type your problem here...' className='w-full px-3 py-2 border rounded-md'/>
+          {!isPendingSearch && <button type='submit' className='w-fit ml-2 px-3 py-2 border border-gray-100 bg-blue-500 rounded-md text-white'>Search</button>}
           {isPendingSearch && <button disabled type='submit' className='w-fit flex justify-center items-center ml-2 px-3 py-2 border border-gray-100 bg-gray-900 text-white'>
               <Spinner width="w-4" height="h-4" />
               <span className="w-fit block ml-2">Loading</span>
