@@ -12,6 +12,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "dompurify": "^3.0.6",
+    "framer-motion": "^10.16.16",
     "jsonwebtoken": "^9.0.2",
     "marked": "^11.1.0",
     "mongodb": "^6.3.0",
@@ -19,7 +20,8 @@
     "next": "14.0.4",
     "node-fetch": "^3.3.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-feather": "^2.0.10"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
