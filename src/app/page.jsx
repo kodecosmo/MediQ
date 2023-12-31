@@ -80,7 +80,6 @@ function Home() {
                 return (<p className='default-styles' key={index} dangerouslySetInnerHTML={{ __html: marked.parse(DOMPurify.sanitize(line.text)) }} />)
               })}
           </div> : <Error styleclass="flex items-center my-2 text-sm text-red-800" message={`Please try again.`} /> }
-            
         </div>
 
       </div>
