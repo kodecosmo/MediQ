@@ -33,7 +33,7 @@ function Register() {
 
   return (
     <main className="w-full h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+      <div className="bg-background p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center mb-6">Register</h1>
 
         <form
@@ -73,7 +73,7 @@ function Register() {
           {!isPending && (
             <button
               type="submit"
-              className="block w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+              className="block w-full bg-primary text-background p-2 mt-4 rounded hover:bg-secondary hover:text-text transition-colors duration-200 ease-in-out"
             >
               Register
             </button>
@@ -81,13 +81,13 @@ function Register() {
           {isPending && (
             <button
               disabled
-              className="w-full bg-gray-500 text-white p-2 rounded flex items-center justify-center"
+              className="w-full bg-secondary text-background p-2 rounded flex items-center justify-center"
             >
               <Spinner width="w-4" height="h-4" />
               <span className="w-fit block ml-2">Loading</span>
             </button>
           )}
-          <div className="mt-3">Existing user ? <Link href="/login"><span className="text-blue-600">Back to login</span></Link> </div>
+          <div className="mt-3">Already have an account? <Link href="/login"><span className="text-primary hover:underline transition-colors duration-200 ease-in-out">login</span></Link> </div>
           {error && <Error message={error} />}
         </form>
       </div>
