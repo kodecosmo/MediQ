@@ -9,6 +9,7 @@ import DOMPurify from 'dompurify';
 import useSearch from '@/hooks/useSearch';
 import Spinner from '@/components/Spinner';
 import Error from '@/components/Error';
+import filterFirstName from '@/helpers/filterFirstName';
 
 function Home() {
 
@@ -45,10 +46,11 @@ function Home() {
     try {
         
       if (Object.keys(data).length > 0) {
+
         setUser({
-          name: data.user.name,
+          name: filterFirstName(data.user.name),
           email: data.user.email,
-        })
+        });
       }
         
     } catch (error) {
