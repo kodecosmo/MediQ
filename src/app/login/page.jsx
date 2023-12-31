@@ -32,7 +32,7 @@ function Login() {
 
   return (
     <main className="w-full h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+      <div className="bg-background p-8 rounded shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
 
         <form
@@ -62,7 +62,7 @@ function Login() {
           {!isPending && (
             <button
               type="submit"
-              className="block w-full bg-blue-500 text-white p-2 mt-4 rounded hover:bg-blue-600"
+              className="block w-full bg-primary text-background p-2 mt-4 rounded hover:bg-secondary hover:text-text transition-colors duration-200 ease-in-out"
             >
               Login
             </button>
@@ -76,7 +76,7 @@ function Login() {
               <span className="w-fit block ml-2">Loading</span>
             </button>
           )}
-          <div className="mt-3">New user ? <Link href="/register"><span className="text-blue-600">Register now</span></Link> </div>
+          <div className="mt-3">New user ? <Link href="/register"><span className="text-primary hover:underline transition-colors duration-200 ease-in-out">Register now</span></Link> </div>
           {error && <Error message={error} />}
         </form>
       </div>
