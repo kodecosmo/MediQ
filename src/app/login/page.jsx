@@ -24,7 +24,7 @@ function Login() {
     isPending: isPending,
     error: error,
     handleDispatch: handleDispatch,
-  } = useAuthenticate({ email, password }, "/api/login", "POST");
+  } = useAuthenticate("/api/login", "POST", { email, password });
 
   const handleSubmit = (e) => {
     e.preventDefault();

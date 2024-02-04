@@ -25,7 +25,7 @@ function Register() {
     isPending: isPending,
     error: error,
     handleDispatch: handleDispatch,
-  } = useAuthenticate({ name, email, password }, "/api/register", "POST");
+  } = useAuthenticate("/api/register", "POST", { name, email, password });
 
   const handleSubmit = (e) => {
     e.preventDefault();

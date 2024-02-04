@@ -43,7 +43,7 @@ export async function GET(request) {
           updated_at: user.updated_at,
           created_at: user.created_at,
         },
-        messages,
+        response: messages,
       });
     } catch (error) {
       return Response.json({ success: false, message: error.message });
@@ -59,8 +59,7 @@ export async function GET(request) {
 export async function POST(request) {
   const data = await request.json();
 
-  const customPrompts =
-    "Allways give firstaids for the question as steps only.";
+  const customPrompts = `Must only return first-aid for the question as steps. And you should respond as ${process.env.NEXT_PUBLIC_APP_NAME} service.`;
 
   const question = data.request || null;
 

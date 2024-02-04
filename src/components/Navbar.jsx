@@ -1,19 +1,40 @@
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "@/components/Spinner";
+import useFetch from "@/hooks/useFetch";
 
-const Navbar = ({ width }) => {
+const Navbar = ({ width, handleClearMessages }) => {
   const router = useRouter();
+
+  const {
+    response: clearChatData,
+    isPending: isClearChatPending,
+    error: clearChatError,
+    handleDispatch: handleClearChat,
+  } = useFetch("api/messages/clear", "DELETE");
 
   const [isPending, setIsPending] = useState(false);
 
   const redirectPath = process.env.NEXT_PUBLIC_UNAUTH_REDIRECT_URL;
+
+  const [clearChatRequest, setClearChatRequest] = useState({
+    status: false,
+    data: [],
+    isPending: false,
+    error: null,
+  });
 
   const handleLogout = () => {
     setIsPending(true);
     localStorage.removeItem("token");
     router.push(redirectPath);
   };
+
+  useEffect(() => {
+    if (isClearChatPending && !clearChatError) {
+      handleClearMessages();
+    }
+  }, [isClearChatPending]);
 
   return (
     <section
@@ -24,6 +45,23 @@ const Navbar = ({ width }) => {
         {process.env.NEXT_PUBLIC_APP_NAME}
       </div>
       <div className="flex items-center">
+        {!isClearChatPending && (
+          <button
+            onClick={handleClearChat}
+            className="w-full border-gray-100 bg-blue-500 p-2 rounded transition-colors duration-200 ease-in-out mr-2 text-background flex items-center justify-center"
+          >
+            Clear
+          </button>
+        )}
+        {isClearChatPending && (
+          <button
+            onClick={handleClearChat}
+            className="w-full border-gray-100 bg-blue-500 p-2 rounded transition-colors duration-200 ease-in-out mr-2 text-background flex items-center justify-center"
+          >
+            <Spinner width="w-4" height="h-4" />
+            <span className="ml-2">Clear</span>
+          </button>
+        )}
         {!isPending && (
           <button
             onClick={handleLogout}

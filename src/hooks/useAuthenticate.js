@@ -1,58 +1,46 @@
 import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-const useAuthenticate = (data, url, method) => { 
+const useAuthenticate = (url, method, body) => {
+  const router = useRouter();
+  const redirectPath = process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL;
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState(null);
 
-    const router = useRouter();
+  const handleDispatch = async () => {
+    setIsPending(true);
+    setError(null);
 
-    const redirectPath = process.env.NEXT_PUBLIC_AUTH_REDIRECT_URL;
+    try {
+      const res = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
 
-    const [isPending, setIsPending] = useState(false);
-    const [error, setError] = useState(null);
+      if (!res.ok) {
+        throw new Error("Could not fetch the data from the resource");
+      }
 
-    const handleDispatch = () => {
-        
-        setIsPending(true);
+      const responseData = await res.json();
 
-        try {
-            const res = fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(res => {
-                if (!res.ok) {
-                    throw Error('Coud not fetch the data from the resource');
-                }
-                return res.json();
-            })
-            .then(res => {
+      if (!responseData.success) {
+        setError(responseData.message);
+        return;
+      }
 
-                if (!res.success) {
-                    setError(res.message);
-                    setIsPending(false);
-                    return;
-                }
-
-                localStorage.setItem('token', res.user.token);
-                setError(null);
-                setIsPending(false);
-                router.push(redirectPath);
-            })
-            .catch(err => {
-                setError(err.message);
-                setIsPending(false);
-            });
-
-        } catch (error) {
-            setError(error);
-            setIsPending(false);
-        }
+      localStorage.setItem("token", responseData.user.token);
+      router.push(redirectPath);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsPending(false);
     }
+  };
 
-    return { isPending, error, handleDispatch };
-}
+  return { isPending, error, handleDispatch };
+};
 
 export default useAuthenticate;

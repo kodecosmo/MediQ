@@ -1,62 +1,48 @@
-// Filter and redirect routes without token to `/`
-
 import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 const useHasntToken = (url) => {
+  const router = useRouter();
+  const redirectPath = process.env.NEXT_PUBLIC_UNAUTH_REDIRECT_URL;
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState(null);
 
-    const router = useRouter();
+  const handleDispatch = async () => {
+    setIsPending(true);
+    setError(null);
 
-    const redirectPath = process.env.NEXT_PUBLIC_UNAUTH_REDIRECT_URL;
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    const [isPending, setIsPending] = useState(false);
-    const [error, setError] = useState(null);
+      if (!res.ok) {
+        throw new Error("Could not fetch the data from the resource");
+      }
 
-    const handleDispatch = () => {
-        
-        setIsPending(true);
+      const responseData = await res.json();
 
-        try {
+      if (!responseData.success) {
+        setError(responseData.message);
+        router.push(redirectPath);
+        return;
+      }
 
-            const token = localStorage.getItem('token');
-            
-            const res = fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            })
-            .then(res => {
-                if (!res.ok) {
-                    throw Error('Coud not fetch the data from the resource');
-                }
-                return res.json();
-            })
-            .then(res => {
-
-                if (!res.success) {
-                    setError(res.message);
-                    setIsPending(false);
-                    router.push(redirectPath);
-                }
-
-                setError(null);
-                setIsPending(false);
-            })
-            .catch(err => {
-                setError(err.message);
-                setIsPending(false);
-                router.push(redirectPath);
-            });
-
-        } catch (error) {
-            setError(error);
-            setIsPending(false);
-        }
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      router.push(redirectPath);
+    } finally {
+      setIsPending(false);
     }
+  };
 
-    return { isPending, error, handleDispatch };
-}
+  return { isPending, error, handleDispatch };
+};
 
 export default useHasntToken;
