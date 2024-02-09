@@ -10,6 +10,7 @@
     "json-server": "npx json-server --watch data/db.json --port 4000"
   },
   "dependencies": {
+    "@splinetool/react-spline": "^2.2.6",
     "bcrypt": "^5.1.1",
     "dompurify": "^3.0.6",
     "framer-motion": "^10.16.16",
